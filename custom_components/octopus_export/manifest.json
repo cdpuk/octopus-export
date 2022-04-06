@@ -1,0 +1,18 @@
+{
+  "domain": "octopus_export",
+  "name": "Octopus Agile Export",
+  "version": "0.0.1",
+  "config_flow": true,
+  "documentation": "https://github.com/cdpuk/octopus-export",
+  "issue_tracker": "https://github.com/cdpuk/octopus-export/issues",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": [],
+  "dhcp": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@cdpuk"
+  ],
+  "iot_class": "cloud_polling"
+}

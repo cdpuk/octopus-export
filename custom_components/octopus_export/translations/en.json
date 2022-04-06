@@ -1,0 +1,16 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Select region",
+                "description": "Pricing varies by region. Each region can be identified by either a letter (A-P) or digits 9 and 10 of your electrical supply MPAN.",
+                "data": {
+                    "region": "Distribution Network Operator (DNO) region"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Failed to connect to the Octopus API"
+        }
+    }
+}
