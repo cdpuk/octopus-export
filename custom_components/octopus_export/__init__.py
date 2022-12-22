@@ -7,6 +7,7 @@ import async_timeout
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -21,21 +22,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     session = async_get_clientsession(hass)
     product_svc = ProductService(session)
-    product = await product_svc.async_get_export_product()
 
-    product_code = product.code
-    region_code = entry.data.get(CONF_REGION)
-    tariff_code = product.tariff_codes[region_code]
-    tariff = AgileTariff(session, product_code, tariff_code)
+    try:
+        product = await product_svc.async_get_export_product()
 
-    coordinator = OctopusTariffUpdateCoordinator(hass, tariff)
-    await coordinator.async_config_entry_first_refresh()
+        product_code = product.code
+        region_code = entry.data.get(CONF_REGION)
+        tariff_code = product.tariff_codes[region_code]
+        tariff = AgileTariff(session, product_code, tariff_code)
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
-    hass.config_entries.async_setup_platforms(entry, _PLATFORMS)
+        coordinator = OctopusTariffUpdateCoordinator(hass, tariff)
+        await coordinator.async_config_entry_first_refresh()
 
-    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
-    return True
+        hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+        hass.config_entries.async_setup_platforms(entry, _PLATFORMS)
+
+        entry.async_on_unload(entry.add_update_listener(async_reload_entry))
+        return True
+    except Exception as ex:  # pylint: disable=broad-except
+        raise ConfigEntryNotReady from ex
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
