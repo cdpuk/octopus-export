@@ -7,11 +7,7 @@ from enum import Enum
 import logging
 from typing import Any
 
-from homeassistant.components.sensor import (
-    STATE_CLASS_MEASUREMENT,
-    SensorEntity,
-    SensorEntityDescription,
-)
+from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import DEVICE_CLASS_MONETARY
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant
@@ -67,7 +63,6 @@ class CurrentRateSensor(OctopusAgileTariffEntity, SensorEntity):
             name="Agile Export Rate",
             icon=Icon.CASH,
             device_class=DEVICE_CLASS_MONETARY,
-            state_class=STATE_CLASS_MEASUREMENT,
             native_unit_of_measurement="£/kWh",
         )
         region_code = self.config_entry.data[CONF_REGION]
